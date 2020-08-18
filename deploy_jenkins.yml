@@ -1,0 +1,30 @@
+---
+
+# Setup docker
+
+
+
+# Setup the Jenkins server
+
+- name: Create a directory if it does not exist
+  file:
+    path: /var/lib/jenkins
+    state: directory
+    mode: '0755'
+    owner: 1000
+
+- name: Setup the Jenkins container
+  docker_container:
+    name: sectools-jenkins
+    image: jenkinsci/blueocean
+    state: started
+    user: root
+    recreate: yes
+    restart_policy: always
+    published_ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+#      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
